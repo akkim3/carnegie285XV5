@@ -11,4 +11,81 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+ auto intakeA = AsyncControllerFactory::velIntegrated(-20);
+auto descorerMA = AsyncControllerFactory::velIntegrated(-19);
+
+ okapi::MotorGroup cataA({7,-8});
+ pros::ADILineSensor sensorA(1);
+ auto driveA = ChassisControllerFactory::create(
+   {11,9},
+   {-12,-10},
+   AbstractMotor::gearset::green,
+   {4.125_in,11.5_in}
+ );
+
+ void cataTask(void*param){
+if((bool*)param){
+
+  while(sensorA.get_value() > 1700){
+    cataA.moveVelocity(100);
+
+  }
+  cataA.setBrakeMode(AbstractMotor::brakeMode::hold);
+  cataA.moveVelocity(0);
+
+  }
+  else{
+    cataA.moveVelocity(100);
+    pros::delay(1000);
+    cataA.setBrakeMode(AbstractMotor::brakeMode::coast);
+    cataA.moveVelocity(0);
+  }
+}
+void loadCata(){
+
+
+}
+
+void fireCata(){
+
+
+}
+QLength sideCapDistance = 3.5_ft;
+QLength frontFlagDistance = 4.125_ft;
+QLength frontCapDistance = 4.0_ft;
+QLength midFlagDistance = 1.0_ft;
+bool blue = false; //If red -> false, If blue -> true
+void autonomous() {
+
+  driveA.moveDistanceAsync(sideCapDistance);
+  loadCata();
+  driveA.waitUntilSettled();
+  intakeA.setTarget(200);
+  pros::delay(1000);
+  intakeA.setTarget(0);
+  driveA.moveDistance(-sideCapDistance);
+  driveA.waitUntilSettled();
+  if(blue){driveA.turnAngle(90_deg);}
+  else{driveA.turnAngle(-90_deg);}
+  fireCata();
+  driveA.moveDistance(frontFlagDistance);
+  driveA.waitUntilSettled();
+  driveA.moveDistance(-frontFlagDistance);
+  driveA.waitUntilSettled();
+  if(blue){driveA.turnAngle(-30_deg);}
+  else{driveA.turnAngle(30_deg);}
+  intakeA.setTarget(-120);
+  driveA.moveDistance(frontCapDistance);
+  driveA.waitUntilSettled();
+  if(blue){driveA.turnAngle(-10_deg);}
+  else{driveA.turnAngle(10_deg);}
+  driveA.moveDistance(-frontCapDistance);
+  driveA.waitUntilSettled();
+
+
+
+
+
+
+
+}
