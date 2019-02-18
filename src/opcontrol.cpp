@@ -16,6 +16,7 @@
  Controller controller;
  ControllerButton brakeToggleButton (ControllerDigital::B);
  ControllerButton cataFire (ControllerDigital::R1);
+ControllerButton descorer (ControllerDigital::R2);
  ControllerButton intakeFwd (ControllerDigital::L1);
  ControllerButton intakeRev (ControllerDigital::L2);
  bool cataToggle {false};
@@ -24,6 +25,7 @@
 
 
  auto intake = AsyncControllerFactory::velIntegrated(-20);
+auto descorerM = AsyncControllerFactory::velIntegrated(-19);
 
  okapi::MotorGroup cata({7,-8});
  pros::ADILineSensor sensor(1);
@@ -62,14 +64,20 @@ void opcontrol() {
       cataToggle = !cataToggle;
       pros::Task my_Task (cataTask, (void*)cataToggle,TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"My Task");
     }
-    if(intakeFwd.isPressed() && !intakeRev.isPressed()){
+    if(intakeFwd.isPressed() && !intakeRev.isPressed() && !descorer.isPressed()){
       intake.setTarget(200);
       }
-    else if(intakeRev.isPressed() && !intakeFwd.isPressed()){
+    else if(intakeRev.isPressed() && !intakeFwd.isPressed() && !descorer.isPressed()){
         intake.setTarget(-200);
         }
-    else if(intakeRev.isPressed() && intakeFwd.isPressed()){
+    else if(intakeRev.isPressed() && intakeFwd.isPressed() && !descorer.isPressed()){
           intake.setTarget(-120);
+          }
+else if(!intakeRev.isPressed() && !intakeFwd.isPressed() && descorer.isPressed()){
+          descorerM.setTarget(200);
+          }
+else if(intakeRev.isPressed() && !intakeFwd.isPressed() && descorer.isPressed()){
+          descorerM.setTarget(-200);
           }
     else{
         intake.setTarget(0);
