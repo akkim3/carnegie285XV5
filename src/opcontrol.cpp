@@ -20,7 +20,7 @@ ControllerButton capFlipMacro (ControllerDigital::A);
 ControllerButton descorer (ControllerDigital::R2);
  ControllerButton intakeFwd (ControllerDigital::L1);
  ControllerButton intakeRev (ControllerDigital::L2);
- bool cataToggle {false};
+ bool cataToggle {true};
 
 
 
@@ -53,6 +53,7 @@ if((bool*)param){
     pros::delay(1000);
     cata.setBrakeMode(AbstractMotor::brakeMode::coast);
     cata.moveVelocity(0);
+	cataToggle = !cataToggle;
   }
 }
 auto driveA = ChassisControllerFactory::create(
