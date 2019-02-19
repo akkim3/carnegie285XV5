@@ -55,7 +55,15 @@ if((bool*)param){
     cata.moveVelocity(0);
   }
 }
-
+auto driveA = ChassisControllerFactory::create(
+  {11, 9}, // Left motors
+  {-12, -10},   // Right motors
+  {0.001, 0, 0}, // distance controller
+  {0.001, 0, 0}, // angle controller (helps you drive straight)
+  {0.001, 0, 0}, // turn controller
+  AbstractMotor::gearset::green, // Torque gearset
+  {4.125_in, 11.5_in} // 4 inch wheels, 12.5 inch wheelbase width
+);
 
 void opcontrol() {
 
@@ -66,9 +74,11 @@ void opcontrol() {
       pros::Task my_Task (cataTask, (void*)cataToggle,TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"My Task");
     }
 if(descorerMacro.changedToPressed()){
-	descorerM.moveRelative(135,200);
+	/*descorerM.moveRelative(135,200);
 	pros::delay(500);
 	descorerM.moveRelative(-135,200);
+	*/
+	driveA.moveDistance(2_ft);
 }
     if(intakeFwd.isPressed() && !intakeRev.isPressed() && !descorer.isPressed()){
       intake.setTarget(200);
