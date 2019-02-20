@@ -15,7 +15,11 @@
  */
  Controller controller;
  ControllerButton brakeToggleButton (ControllerDigital::B);
-ControllerButton descorerMacro (ControllerDigital::A);
+ControllerButton descorerMacro (ControllerDigital::right);
+ControllerButton pidUp (ControllerDigital::X);
+ControllerButton pidDown (ControllerDigital::Y);
+ControllerButton pidDUp (ControllerDigital::up);
+ControllerButton pidDDown (ControllerDigital::down);
  ControllerButton cataFire (ControllerDigital::R1);
 ControllerButton descorer (ControllerDigital::R2);
  ControllerButton intakeFwd (ControllerDigital::L1);
@@ -41,7 +45,7 @@ auto descorerM = AsyncControllerFactory::velIntegrated(-19);
 if((bool*)param){
 
   while(sensor.get_value() > 1700){
-    cata.moveVelocity(100);
+    cata.moveVelocity(200);
 
   }
   cata.setBrakeMode(AbstractMotor::brakeMode::hold);
@@ -49,13 +53,18 @@ if((bool*)param){
 
   }
   else{
-    cata.moveVelocity(100);
+    cata.moveVelocity(200);
     pros::delay(1000);
     cata.setBrakeMode(AbstractMotor::brakeMode::coast);
     cata.moveVelocity(0);
 
   }
 }
+
+float kd = 0.001;
+float kp = 0.001;
+
+
 auto driveA = ChassisControllerFactory::create(
   {11, 9}, // Left motors
   {-12, -10},   // Right motors
@@ -66,9 +75,14 @@ auto driveA = ChassisControllerFactory::create(
   {4.125_in, 11.5_in} // 4 inch wheels, 12.5 inch wheelbase width
 );
 
+
 void opcontrol() {
 
 	while (true) {
+    pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
+                     (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
+                     (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
+    pros::lcd::print(0, "%d %d %d",kd,kp,0);
     drive.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::rightX));
     if(cataFire.changedToPressed()){
       cataToggle = !cataToggle;
@@ -81,6 +95,19 @@ if(descorerMacro.changedToPressed()){
 	*/
 	driveA.moveDistance(2_ft);
 }
+if(pidUp.changedToPressed()){
+	kp += 0.005;
+}
+if(pidDown.changedToPressed()){
+	kp -= 0.005;
+}
+if(pidDUp.changedToPressed()){
+	kd += 0.0001;
+}
+if(pidDDown.changedToPressed()){
+	kd -= 0.0001;
+}
+
     if(intakeFwd.isPressed() && !intakeRev.isPressed() && !descorer.isPressed()){
       intake.setTarget(200);
       }

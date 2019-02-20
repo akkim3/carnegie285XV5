@@ -15,11 +15,11 @@
  */
  Controller controller;
  ControllerButton brakeToggleButton (ControllerDigital::B);
-ControllerButton descorerMacro (ControllerDigital::A);
+ControllerButton descorerMacro (ControllerDigital::right);
 ControllerButton pidUp (ControllerDigital::X);
 ControllerButton pidDown (ControllerDigital::Y);
-ControllerButton pidDUp (ControllerDigital::UP);
-ControllerButton pidDDown (ControllerDigital::DOWN);
+ControllerButton pidDUp (ControllerDigital::up);
+ControllerButton pidDDown (ControllerDigital::down);
  ControllerButton cataFire (ControllerDigital::R1);
 ControllerButton descorer (ControllerDigital::R2);
  ControllerButton intakeFwd (ControllerDigital::L1);
@@ -79,6 +79,9 @@ auto driveA = ChassisControllerFactory::create(
 void opcontrol() {
 
 	while (true) {
+    pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
+                     (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
+                     (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
     pros::lcd::print(0, "%d %d %d",kd,kp,0);
     drive.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::rightX));
     if(cataFire.changedToPressed()){
