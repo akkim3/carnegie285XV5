@@ -93,16 +93,16 @@ if(descorerMacro.changedToPressed()){
 	driveA.moveDistance(2_ft);
 }
 if(pidUp.changedToPressed()){
-	kp += 0.01;
+	kp += 0.005;
 }
 if(pidDown.changedToPressed()){
-	kp -= 0.01;
+	kp -= 0.005;
 }
 if(pidDUp.changedToPressed()){
-	kd += 0.01;
+	kd += 0.0001;
 }
 if(pidDDown.changedToPressed()){
-	kd -= 0.01;
+	kd -= 0.0001;
 }
 
     if(intakeFwd.isPressed() && !intakeRev.isPressed() && !descorer.isPressed()){
