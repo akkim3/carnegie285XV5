@@ -62,15 +62,15 @@ if((bool*)param){
 }
 
 float kd = 0.0001;
-float kp = 0.0065; // was working at 0.005 -> dead on the target
+float kp = 0.00005; // was working at 0.005 -> dead on the target
 
 
 auto driveA = ChassisControllerFactory::create(
   {11, 9}, // Left motors
   {-12, -10},   // Right motors
-  {kp, 0, kd}, // distance controller
-  {0.0001, 0, 0}, // angle controller (helps you drive straight)
-  {0.001, 0, 0}, // turn controller
+  {0.0065, 0, 0.0001}, // distance controller
+  {kp, 0, kd}, // angle controller (helps you drive straight)
+  {kp, 0.00001, kd}, // turn controller
   AbstractMotor::gearset::green, // Torque gearset
   {4.125_in, 11.5_in} // 4 inch wheels, 11.5 inch wheelbase width
 );
