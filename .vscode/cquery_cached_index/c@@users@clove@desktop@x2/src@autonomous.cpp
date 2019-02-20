@@ -16,12 +16,23 @@ auto descorerMA = AsyncControllerFactory::velIntegrated(-19);
 
  okapi::MotorGroup cataA({7,-8});
  pros::ADILineSensor sensorA(1);
+ 
  auto driveA = ChassisControllerFactory::create(
    {11,9},
    {-12,-10},
    AbstractMotor::gearset::green,
    {4.125_in,11.5_in}
  );
+auto drivePID = ChassisControllerFactory::create(
+  {11, 9}, // Left motors
+  {-12, -10},   // Right motors
+  {kp, ki, kd}, // distance controller
+  {kp, ki, kd}, // angle controller (helps you drive straight)
+  {kp, ki, kd}, // turn controller
+  AbstractMotor::gearset::green, // Torque gearset
+  {4.125_in, 11.5_in} // 4 inch wheels, 12.5 inch wheelbase width
+);
+
 
  void cataTask(void*param){
 if((bool*)param){

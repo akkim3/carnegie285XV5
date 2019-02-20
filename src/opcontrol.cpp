@@ -15,12 +15,12 @@
  */
  Controller controller;
  ControllerButton brakeToggleButton (ControllerDigital::B);
-ControllerButton capFlipMacro (ControllerDigital::A);
+ControllerButton descorerMacro (ControllerDigital::A);
  ControllerButton cataFire (ControllerDigital::R1);
 ControllerButton descorer (ControllerDigital::R2);
  ControllerButton intakeFwd (ControllerDigital::L1);
  ControllerButton intakeRev (ControllerDigital::L2);
- bool cataToggle {true};
+ bool cataToggle {false};
 
 
 
@@ -53,13 +53,13 @@ if((bool*)param){
     pros::delay(1000);
     cata.setBrakeMode(AbstractMotor::brakeMode::coast);
     cata.moveVelocity(0);
-	cataToggle = !cataToggle;
+
   }
 }
 auto driveA = ChassisControllerFactory::create(
   {11, 9}, // Left motors
   {-12, -10},   // Right motors
-  {0.001, 0, 0}, // distance controller
+  {0.05, 0, 0}, // distance controller
   {0.001, 0, 0}, // angle controller (helps you drive straight)
   {0.001, 0, 0}, // turn controller
   AbstractMotor::gearset::green, // Torque gearset
