@@ -21,7 +21,7 @@ auto descorerMA = AsyncControllerFactory::velIntegrated(-19);
    {11,9},
    {-12,-10},
    AbstractMotor::gearset::green,
-   {4.125_in,12_in}
+   {4.125_in,12.125_in}
  );
  AsyncMotionProfileController profileController = AsyncControllerFactory::motionProfile(
    1,  // Maximum linear velocity of the Chassis in m/s
@@ -68,7 +68,7 @@ void fireCata(){
 
 }
 QLength sideCapDistance = 4_ft;
-QLength frontFlagDistance = 4.125_ft;
+QLength frontFlagDistance = 4_ft;
 QLength frontCapDistance = 4.0_ft;
 QLength midFlagDistance = 1.0_ft;
 QLength platformAlignDistance = -4.0_ft;
@@ -80,7 +80,7 @@ bool front = true;
 bool skills = false;
 void autonomous() {
 pros::delay(100);
-/*
+
 if( pot.get_value() > 10 && pot.get_value() < 827){
   blue = false;
   front = true;
@@ -106,11 +106,15 @@ if( pot.get_value() > 2462 && pot.get_value() < 3278){
 }
 if( pot.get_value() > 3279 && pot.get_value() < 4096){
   blue = false;
+  front = false;
   skills = true;
 }
-*/
 
-  if(front){
+  pros::lcd::print(2, "Blue?:%d",blue);
+    pros::lcd::print(3, "Front?:%d ",front);
+      pros::lcd::print(4, "Skills?:%d", skills);
+
+  if(front && !skills){
 
   profileController.generatePath({
   Point{0_ft, 0_ft, 0_deg},  // Profile starting position, this will normally be (0, 0, 0)
@@ -137,11 +141,12 @@ if(blue){driveA.turnAngle(-90_deg);}
 else{driveA.turnAngle(90_deg);}
 driveA.waitUntilSettled();
 driveA.setMaxVelocity(50);
-driveA.moveDistanceAsync(-0.25_ft);
+driveA.moveDistance(-0.75_ft);
 driveA.waitUntilSettled();
-driveA.moveDistanceAsync(0.25_ft);
+pros::delay(500);
+driveA.moveDistance(0.5_ft);
 driveA.waitUntilSettled();
-driveA.setMaxVelocity(200);
+driveA.setMaxVelocity(50);
 
 
 if(blue){driveA.turnAngle(90_deg);}
@@ -171,7 +176,7 @@ if(blue){driveA.turnAngle(-45_deg);}
 else{driveA.turnAngle(45_deg);}
 intakeA.setTarget(-200);
 driveA.waitUntilSettled();
-driveA.moveDistance(6_ft); //revert to 3_ft if it doesnt work.
+driveA.moveDistance(8_ft); //revert to 3_ft if it doesnt work.
 driveA.waitUntilSettled();
 intakeA.setTarget(0);
 
@@ -227,7 +232,7 @@ driveA.waitUntilSettled();
   driveA.waitUntilSettled();
 */
 }
-if(!front){
+if(!front && !skills){
   profileController.generatePath({
   Point{0_ft, 0_ft, 0_deg},  // Profile starting position, this will normally be (0, 0, 0)
   Point{sideCapDistance, 0_ft, 0_deg}}, // The next point in the profile, 3 feet forward

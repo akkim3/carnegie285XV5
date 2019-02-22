@@ -39,7 +39,7 @@ ControllerButton descorer (ControllerDigital::R2);
    {11,9},
    {-12,-10},
    AbstractMotor::gearset::green,
-   {4.125_in, 12_in}
+   {4.125_in, 12.125_in}
  );
 
  void cataTask(void*param){
@@ -75,7 +75,7 @@ auto driveTest = ChassisControllerFactory::create(
   {kp, 0, kd}, // angle controller (helps you drive straight)
   {kp, 0.00001, kd}, // turn controller
   AbstractMotor::gearset::green, // Torque gearset
-  {4.125_in, 11.5_in} // 4 inch wheels, 11.5 inch wheelbase width
+  {4.125_in, 11.5_in} // 4.125 inch wheels, 11.5 inch wheelbase width
 );
 pros::ADIPotentiometer potA(2);
 lv_obj_t* label;
@@ -97,31 +97,32 @@ style_txt.text.letter_space = 10;
 style_txt.text.line_space = 1;
 
     style.line.width = 8;
-    *
+    */
     if( potA.get_value() > 10 && potA.get_value() < 827){
       string="Front Red";
-      style_txt.text.color = LV_COLOR_RED;
+
 
     }
     if( potA.get_value() > 828 && potA.get_value() < 1644){
       string="Front Blue";
-      style_txt.text.color = LV_COLOR_BLUE;
+
     }
     if( potA.get_value() > 1645 && potA.get_value() < 2461){
       string="Back Red";
-      style_txt.text.color = LV_COLOR_RED;
+
 
     }
     if( potA.get_value() > 2462 && potA.get_value() < 3278){
       string="Back Blue";
-      style_txt.text.color = LV_COLOR_BLUE;
+
 
     }
     if( potA.get_value() > 3279 && potA.get_value() < 4096){
       string="Skills";
 
-      style.line.color = LV_COLOR_CYAN;
-    }*/
+
+    }
+    pros::lcd::print(1, string);
 
 		drive.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::rightX));
 		if(cataFire.changedToPressed()){
@@ -133,14 +134,14 @@ style_txt.text.line_space = 1;
     drive.turnAngle(90_deg);
 }
   if(pidUp.changedToPressed()){
-    drive.setMaxVelocity(100);
-    drive.turnAngle(90_deg);
+    drive.setMaxVelocity(50);
+    drive.turnAngle(95_deg);
     drive.waitUntilSettled();
     drive.setMaxVelocity(200);
   }
   if(pidDUp.changedToPressed()){
-    drive.setMaxVelocity(100);
-    drive.turnAngle(80_deg);
+    drive.setMaxVelocity(50);
+    drive.turnAngle(90_deg);
     drive.waitUntilSettled();
     drive.setMaxVelocity(200);
   }
@@ -164,8 +165,8 @@ style_txt.text.line_space = 1;
         descorerMotor.setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
         descorerMotor.moveVelocity(0);
 			}
-
+      	pros::delay(20);
 		}
 
-		pros::delay(20);
+
 }
