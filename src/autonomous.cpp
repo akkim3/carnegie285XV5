@@ -75,7 +75,7 @@ QLength platformAlignDistance = -4.0_ft;
 QLength alliancePlatformDistance = 4.0_ft;
 QLength centerPlatformDistance = 6.0_ft;
 
-bool blue = false; //If red -> false, If blue -> true
+bool blue = true; //If red -> false, If blue -> true
 bool front = false;
 bool skills = false;
 void autonomous() {
@@ -183,7 +183,7 @@ driveA.waitUntilSettled();
 if(!front && !skills){
   profileController.generatePath({
   Point{0_ft, 0_ft, 0_deg},  //   (0, 0, 0)
-  Point{sideCapDistance, 0_ft, 0_deg}}, //
+  Point{sideCapDistance, 0_ft, 0_deg}},
   "Ball" // Profile name
   );
   profileController.setTarget("Ball");
@@ -194,7 +194,9 @@ if(!front && !skills){
   intakeA.setTarget(200);
   profileController.waitUntilSettled();
   profileController.setTarget("Ball", true);
-
+  intakeA.setTarget(200);
+  pros::delay(500);
+  intakeA.setTarget(0);
   profileController.waitUntilSettled();
   profileController.removePath("Ball");
   driveA.setMaxVelocity(50);
