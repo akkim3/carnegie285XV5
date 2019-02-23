@@ -167,7 +167,7 @@ if(blue){driveA.turnAngle(-95_deg);}
 else{driveA.turnAngle(95_deg);}
 driveA.waitUntilSettled();
 driveA.setMaxVelocity(150);
-driveA.moveDistance(10_ft);
+driveA.moveDistance(5_ft);
 driveA.waitUntilSettled();
 }
 
@@ -232,6 +232,19 @@ if (skills){
 
 
   profileController.waitUntilSettled();
+  profileController.generatePath({
+  Point{0_ft, 0_ft, 0_deg},  //   (0, 0, 0)
+  Point{1_ft, 0_ft, 0_deg}}, //
+  "FlipCap" // Profile name
+);
+profileController.setTarget("FlipCap");
+intakeA.setTarget(-200);
+profileController.waitUntilSettled();
+profileController.setTarget("FlipCap",true);
+intakeA.setTarget(0);
+profileController.waitUntilSettled();
+  profileController.removePath("FlipCap");
+
   profileController.setTarget("Ball", true);
 
   profileController.waitUntilSettled();
@@ -291,14 +304,23 @@ if (skills){
   "Ball" // Profile name
 );
 profileController.setTarget("Ball");
-
 loadCata();
-
-
-profileController.waitUntilSettled();
 intakeA.setTarget(200);
-pros::delay(1000);
+profileController.waitUntilSettled();
+
 intakeA.setTarget(0);
+profileController.generatePath({
+Point{0_ft, 0_ft, 0_deg},  //   (0, 0, 0)
+Point{1_ft, 0_ft, 0_deg}}, //
+"FlipCap" // Profile name
+);
+profileController.setTarget("FlipCap");
+intakeA.setTarget(-200);
+profileController.waitUntilSettled();
+profileController.setTarget("FlipCap",true);
+intakeA.setTarget(0);
+profileController.waitUntilSettled();
+profileController.removePath("FlipCap");
 driveA.setMaxVelocity(50);
 if(blue){driveA.turnAngle(90_deg);}
 else{driveA.turnAngle(-90_deg);}
