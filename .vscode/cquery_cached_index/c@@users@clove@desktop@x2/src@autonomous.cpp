@@ -67,8 +67,8 @@ void fireCata(){
   cataA.moveVelocity(0);
 
 }
-QLength sideCapDistance = 4_ft;
-QLength frontFlagDistance = 4_ft;
+QLength sideCapDistance = 3.5_ft;
+QLength frontFlagDistance = 4.5_ft;
 QLength frontCapDistance = 4.0_ft;
 QLength midFlagDistance = 1.0_ft;
 QLength platformAlignDistance = -4.0_ft;
@@ -76,11 +76,11 @@ QLength alliancePlatformDistance = 4.0_ft;
 QLength centerPlatformDistance = 6.0_ft;
 
 bool blue = false; //If red -> false, If blue -> true
-bool front = true;
+bool front = false;
 bool skills = false;
 void autonomous() {
 pros::delay(100);
-
+/*
 if( pot.get_value() > 10 && pot.get_value() < 827){
   blue = false;
   front = true;
@@ -108,7 +108,7 @@ if( pot.get_value() > 3279 && pot.get_value() < 4096){
   blue = false;
   front = false;
   skills = true;
-}
+}*/
 
   pros::lcd::print(2, "Blue?:%d",blue);
     pros::lcd::print(3, "Front?:%d ",front);
@@ -117,8 +117,8 @@ if( pot.get_value() > 3279 && pot.get_value() < 4096){
   if(front && !skills){
 
   profileController.generatePath({
-  Point{0_ft, 0_ft, 0_deg},  // Profile starting position, this will normally be (0, 0, 0)
-  Point{sideCapDistance, 0_ft, 0_deg}}, // The next point in the profile, 3 feet forward
+  Point{0_ft, 0_ft, 0_deg},  //   (0, 0, 0)
+  Point{sideCapDistance, 0_ft, 0_deg}}, //
   "Ball" // Profile name
 );
 profileController.setTarget("Ball");
@@ -137,110 +137,98 @@ if(blue){driveA.turnAngle(90_deg);}
 else{driveA.turnAngle(-90_deg);}
 driveA.waitUntilSettled();
 fireCata();
-if(blue){driveA.turnAngle(-90_deg);}
-else{driveA.turnAngle(90_deg);}
-driveA.waitUntilSettled();
-driveA.setMaxVelocity(50);
-driveA.moveDistance(-0.75_ft);
-driveA.waitUntilSettled();
-pros::delay(500);
-driveA.moveDistance(0.5_ft);
-driveA.waitUntilSettled();
-driveA.setMaxVelocity(50);
 
-
-if(blue){driveA.turnAngle(90_deg);}
-else{driveA.turnAngle(-90_deg);}
-driveA.waitUntilSettled();
 driveA.setMaxVelocity(200);
 //TODO: ADJUST FOR COLORS USING IF LOOP//TODO:TEST THIS.
 if(blue){profileController.generatePath({
-Point{0_ft, 0_ft, -90_deg},  // Profile starting position, this will normally be (0, 0, 0)
-Point{0_ft, frontFlagDistance, 90_deg}}, // The next point in the profile, 3 feet forward
+Point{0_ft, 0_ft, -90_deg},  //   (0, 0, 0)
+Point{-0.1_ft, frontFlagDistance, 90_deg}}, //
 "BottomFlag" // Profile name
 );}
 else{
 profileController.generatePath({
-Point{0_ft, 0_ft, -90_deg},  // Profile starting position, this will normally be (0, 0, 0)
-Point{0_ft, frontFlagDistance, -90_deg}}, // The next point in the profile, 3 feet forward
+Point{0_ft, 0_ft, -90_deg},  //   (0, 0, 0)
+Point{-0.1_ft, frontFlagDistance, -90_deg}}, //
 "BottomFlag" // Profile name
 );
 }
 profileController.setTarget("BottomFlag");
 profileController.waitUntilSettled();
+
 profileController.setTarget("BottomFlag", true);
 intakeA.setTarget(0);
 profileController.waitUntilSettled();
 profileController.removePath("BottomFlag");
-if(blue){driveA.turnAngle(-45_deg);}
-else{driveA.turnAngle(45_deg);}
-intakeA.setTarget(-200);
+driveA.setMaxVelocity(50);
+driveA.moveDistance(-1.6_ft);
 driveA.waitUntilSettled();
-driveA.moveDistance(8_ft); //revert to 3_ft if it doesnt work.
+driveA.setMaxVelocity(50);
+if(blue){driveA.turnAngle(-95_deg);}
+else{driveA.turnAngle(95_deg);}
 driveA.waitUntilSettled();
-intakeA.setTarget(0);
-
-/*
-if(blue){driveA.turnAngle(35_deg);}
-else{driveA.turnAngle(-35_deg);}
-driveA.moveDistance(3_ft);
+driveA.setMaxVelocity(150);
+driveA.moveDistance(10_ft);
 driveA.waitUntilSettled();
-*/
-
-
-/*
-//Get Ball Under Cap
-  intakeA.setTarget(200);
-  driveA.moveDistance(sideCapDistance);
-  driveA.waitUntilSettled();
-  loadCata();
-
-  pros::delay(1000);
-  intakeA.setTarget(0);
-  driveA.moveDistance(-sideCapDistance);
-  driveA.waitUntilSettled();
-//Turn to shoot
-  if(blue){driveA.turnAngle(90_deg);}
-  else{driveA.turnAngle(-90_deg);}
-  driveA.waitUntilSettled();
-  fireCata();
-//Hit Mid Flag
-  driveA.moveDistance(frontFlagDistance);
-  driveA.waitUntilSettled();
-  driveA.moveDistance(-frontFlagDistance);
-  driveA.waitUntilSettled();
-//Flip Cap Over
-  if(blue){driveA.turnAngle(-30_deg);}
-  else{driveA.turnAngle(30_deg);}
-  intakeA.setTarget(-120);
-  driveA.moveDistance(frontCapDistance);
-  driveA.waitUntilSettled();
-  if(blue){driveA.turnAngle(-10_deg);}
-  else{driveA.turnAngle(10_deg);}
-
-  driveA.moveDistance(-frontCapDistance);
-  driveA.waitUntilSettled();
-  if(blue){driveA.turnAngle(30_deg);}
-  else{driveA.turnAngle(-30_deg);}
-
-  //Return to Park
-  driveA.moveDistance(platformAlignDistance);
-  driveA.waitUntilSettled();
-  if(blue){driveA.turnAngle(-90_deg);}
-  else{driveA.turnAngle(90_deg);}
-  driveA.moveDistance(alliancePlatformDistance);
-  driveA.waitUntilSettled();
-*/
 }
+
+//B
+//A
+//C
+//K
+//Auto
+
+
+
+
 if(!front && !skills){
   profileController.generatePath({
-  Point{0_ft, 0_ft, 0_deg},  // Profile starting position, this will normally be (0, 0, 0)
-  Point{sideCapDistance, 0_ft, 0_deg}}, // The next point in the profile, 3 feet forward
+  Point{0_ft, 0_ft, 0_deg},  //   (0, 0, 0)
+  Point{sideCapDistance, 0_ft, 0_deg}}, //
   "Ball" // Profile name
   );
   profileController.setTarget("Ball");
+  intakeA.setTarget(100);
+  pros::delay(500);
+  intakeA.setTarget(0);
+  pros::delay(500);
   intakeA.setTarget(200);
-  //loadCata();
+  profileController.waitUntilSettled();
+  profileController.setTarget("Ball", true);
+
+  profileController.waitUntilSettled();
+  profileController.removePath("Ball");
+  driveA.setMaxVelocity(50);
+  if(blue){driveA.turnAngle(90_deg);}
+  else{driveA.turnAngle(-90_deg);}
+  driveA.waitUntilSettled();
+  driveA.moveDistance(2_ft);
+  driveA.waitUntilSettled();
+  driveA.setMaxVelocity(50);
+  if(blue){driveA.turnAngle(-90_deg);}
+  else{driveA.turnAngle(90_deg);}
+  driveA.setMaxVelocity(150);
+  driveA.moveDistance(5_ft);
+  driveA.waitUntilSettled();
+}
+//Skills - Highly Experimental Hail Mary autonomous
+//Starts from the back tile
+//Shoots preload into the flags
+//Goes to mid and get's the flag
+
+
+
+
+
+if (skills){
+
+    profileController.generatePath({
+    Point{0_ft, 0_ft, 0_deg},  //   (0, 0, 0)
+    Point{sideCapDistance, 0_ft, 0_deg}}, //
+    "Ball" // Profile name
+  );
+  profileController.setTarget("Ball");
+  intakeA.setTarget(200);
+  loadCata();
 
 
   profileController.waitUntilSettled();
@@ -248,97 +236,131 @@ if(!front && !skills){
 
   profileController.waitUntilSettled();
   profileController.removePath("Ball");
-  driveA.setMaxVelocity(150);
+  intakeA.setTarget(0);
+  driveA.setMaxVelocity(50);
   if(blue){driveA.turnAngle(90_deg);}
   else{driveA.turnAngle(-90_deg);}
   driveA.waitUntilSettled();
-  driveA.moveDistance(2_ft);
-  driveA.waitUntilSettled();
+  driveA.setMaxVelocity(200);
+  if(blue){profileController.generatePath({
+  Point{0_ft, 0_ft, -90_deg},  //   (0, 0, 0)
+  Point{0_ft, 4_ft, 90_deg}}, //
+  "MoveStart" // Profile name
+  );}
+  else{
+  profileController.generatePath({
+  Point{0_ft, 0_ft, -90_deg},  //   (0, 0, 0)
+  Point{0_ft, 4_ft, -90_deg}}, //
+  "MoveStart" // Profile name
+  );
+  }
+  profileController.setTarget("MoveStart");
+  profileController.waitUntilSettled();
+  profileController.removePath("MoveStart");
+  fireCata();
+
+
+  //TODO: ADJUST FOR COLORS USING IF LOOP//TODO:TEST THIS.
+  if(blue){profileController.generatePath({
+  Point{0_ft, 0_ft, -90_deg},  //   (0, 0, 0)
+  Point{-0.1_ft, frontFlagDistance, 90_deg}}, //
+  "BottomFlag" // Profile name
+  );}
+  else{
+  profileController.generatePath({
+  Point{0_ft, 0_ft, -90_deg},  //   (0, 0, 0)
+  Point{-0.1_ft, frontFlagDistance, -90_deg}}, //
+  "BottomFlag" // Profile name
+  );
+  }
+  profileController.setTarget("BottomFlag");
+  profileController.waitUntilSettled();
+
+  profileController.setTarget("BottomFlag", true);
+  intakeA.setTarget(0);
+  profileController.waitUntilSettled();
+  profileController.removePath("BottomFlag");
+  driveA.setMaxVelocity(50);
   if(blue){driveA.turnAngle(-90_deg);}
   else{driveA.turnAngle(90_deg);}
-  driveA.moveDistance(4_ft);
   driveA.waitUntilSettled();
-
-}
-if (skills){
-  sideCapDistance = 6.25_ft;
-
-
-
+  driveA.setMaxVelocity(200);
   profileController.generatePath({
-  Point{0_ft, 0_ft, 0_deg},  // Profile starting position, this will normally be (0, 0, 0)
-  Point{sideCapDistance, 0_ft, 0_deg}}, // The next point in the profile, 3 feet forward
+  Point{0_ft, 0_ft, 0_deg},  //   (0, 0, 0)
+  Point{sideCapDistance, 0_ft, 0_deg}}, //
   "Ball" // Profile name
 );
 profileController.setTarget("Ball");
-intakeA.setTarget(200);
+
 loadCata();
 
 
 profileController.waitUntilSettled();
-profileController.setTarget("Ball", true);
-
-profileController.waitUntilSettled();
-profileController.removePath("Ball");
+intakeA.setTarget(200);
+pros::delay(1000);
 intakeA.setTarget(0);
-driveA.setMaxVelocity(150);
+driveA.setMaxVelocity(50);
 if(blue){driveA.turnAngle(90_deg);}
 else{driveA.turnAngle(-90_deg);}
-driveA.waitUntilSettled();
-fireCata();
-if(blue){driveA.turnAngle(-90_deg);}
-else{driveA.turnAngle(90_deg);}
-driveA.waitUntilSettled();
-driveA.moveDistanceAsync(-0.25_ft);
-driveA.waitUntilSettled();
-driveA.moveDistanceAsync(0.25_ft);
-driveA.waitUntilSettled();
 
-if(blue){driveA.turnAngle(90_deg);}
-else{driveA.turnAngle(-90_deg);}
-driveA.waitUntilSettled();
-driveA.setMaxVelocity(200);
-//TODO: ADJUST FOR COLORS USING IF LOOP//TODO:TEST THIS.
 if(blue){profileController.generatePath({
-Point{0_ft, 0_ft, -90_deg},  // Profile starting position, this will normally be (0, 0, 0)
-Point{0_ft, frontFlagDistance, 90_deg}}, // The next point in the profile, 3 feet forward
+Point{0_ft, 0_ft, -90_deg},  //   (0, 0, 0)
+Point{0_ft, 0.5_ft, 90_deg}}, //
+"ShootMidFlag" // Profile name
+);}
+else{
+profileController.generatePath({
+Point{0_ft, 0_ft, -90_deg},  //   (0, 0, 0)
+Point{0_ft, 0.5_ft, -90_deg}}, //
+"ShootMidFlag" // Profile name
+);
+}
+profileController.setTarget("ShootMidFlag");
+profileController.waitUntilSettled();
+fireCata();
+profileController.setTarget("ShootMidFlag", true);
+intakeA.setTarget(0);
+profileController.waitUntilSettled();
+profileController.removePath("ShootMidFlag");
+if(blue){profileController.generatePath({
+Point{0_ft, 0_ft, -90_deg},  //   (0, 0, 0)
+Point{-0.1_ft, frontFlagDistance, 90_deg}}, //
 "BottomFlag" // Profile name
 );}
 else{
 profileController.generatePath({
-Point{0_ft, 0_ft, -90_deg},  // Profile starting position, this will normally be (0, 0, 0)
-Point{0_ft, frontFlagDistance, -90_deg}}, // The next point in the profile, 3 feet forward
+Point{0_ft, 0_ft, -90_deg},  //   (0, 0, 0)
+Point{-0.1_ft, frontFlagDistance, -90_deg}}, //
 "BottomFlag" // Profile name
 );
 }
 profileController.setTarget("BottomFlag");
 profileController.waitUntilSettled();
+
 profileController.setTarget("BottomFlag", true);
 intakeA.setTarget(0);
 profileController.waitUntilSettled();
 profileController.removePath("BottomFlag");
-if(blue){driveA.turnAngle(-45_deg);}
-else{driveA.turnAngle(45_deg);}
-intakeA.setTarget(-200);
-driveA.waitUntilSettled();
-driveA.moveDistance(6_ft); //revert to 3_ft if it doesnt work.
-driveA.waitUntilSettled();
-intakeA.setTarget(0);
-
-
-//Skills Changes
-
-driveA.moveDistance(-6_ft); //revert to 3_ft if it doesnt work.
-driveA.waitUntilSettled();
-if(blue){driveA.turnAngle(45_deg);}
-else{driveA.turnAngle(-45_deg);}
-driveA.moveDistance(-2_ft);
-driveA.waitUntilSettled();
+driveA.setMaxVelocity(50);
 if(blue){driveA.turnAngle(-90_deg);}
 else{driveA.turnAngle(90_deg);}
 driveA.waitUntilSettled();
-driveA.moveDistance(8_ft);
+driveA.setMaxVelocity(200);
+profileController.setTarget("Ball", true);
+driveA.setMaxVelocity(50);
+if(blue){driveA.turnAngle(90_deg);}
+else{driveA.turnAngle(-90_deg);}
 driveA.waitUntilSettled();
+  driveA.setMaxVelocity(50);
+  driveA.moveDistance(-1.6_ft);
+  driveA.waitUntilSettled();
+  driveA.setMaxVelocity(50);
+  if(blue){driveA.turnAngle(-95_deg);}
+  else{driveA.turnAngle(95_deg);}
+  driveA.waitUntilSettled();
+  driveA.setMaxVelocity(150);
+  driveA.moveDistance(10_ft);
+  driveA.waitUntilSettled();
 
 }
 
